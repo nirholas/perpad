@@ -1,0 +1,23 @@
+# perpad
+
+> Open-source framework for autonomous perp-trading agents on Hyperliquid: hard risk limits, a tamper-evident public decision journal, paper and live modes, and an MCP server.
+
+perpad is a TypeScript library and CLI. An LLM agent reads live Hyperliquid prices and its account, then opens or closes isolated-margin BTC/ETH perps. Every order passes a risk engine that enforces hard limits in code. Every thought and action is written to a hash-chained public journal. Paper mode (real prices, simulated fills) is the default; live mode needs an explicit flag.
+
+## Docs
+- [perpad: autonomous perp-trading agents on Hyperliquid](https://nirholas.github.io/perpad/): Open-source framework for AI trading agents on Hyperliquid with hard risk limits enforced in code, a tamper-evident public decision journal, paper and live modes, and an MCP server.
+- [Quickstart](https://nirholas.github.io/perpad/quickstart.html): Install perpad, run an agent in paper mode on real Hyperliquid prices in five minutes, then verify its journal.
+- [How it works](https://nirholas.github.io/perpad/how-it-works.html): The tick loop, the tool surface the model sees, and why every order passes through the risk engine.
+- [Risk engine](https://nirholas.github.io/perpad/risk-engine.html): Hard limits: allowed markets, max leverage clamped to the exchange cap, margin per trade, open positions and a daily loss kill switch.
+- [Decision journal](https://nirholas.github.io/perpad/journal.html): A hash-chained, append-only log of every thought, action and refusal. Edit or delete history and verification fails.
+- [Fee split and profit routing](https://nirholas.github.io/perpad/fees-and-profit.html): Integer-exact 30/70 creator-fee split, the $15 sweep minimum, and buyback, compound or payout profit routing.
+- [MCP server](https://nirholas.github.io/perpad/mcp.html): A read-only Model Context Protocol server: live markets, dry-run risk checks and journal audits for any MCP client.
+- [Security model](https://nirholas.github.io/perpad/security.html): Threat model, key handling, what the code refuses to do, and what it cannot protect you from.
+- [FAQ](https://nirholas.github.io/perpad/faq.html): Answers on paper vs live mode, costs, models, leverage, liquidation, and what perpad does not do.
+- [Roadmap](https://nirholas.github.io/perpad/roadmap.html): What ships today, what is next (Solana fee leg, pump.fun launch, profit payouts) and what is out of scope.
+
+## Optional
+- [Full docs in one file](https://nirholas.github.io/perpad/llms-full.txt)
+- [Source and issues](https://github.com/nirholas/perpad)
+- [A2A agent card](https://nirholas.github.io/perpad/.well-known/agent-card.json)
+- [MCP server metadata](https://nirholas.github.io/perpad/.well-known/mcp.json)

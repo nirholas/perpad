@@ -1,0 +1,9 @@
+<h1>FAQ</h1>
+<h3>Is this a hosted service?</h3><p>No. It is a library and CLI you run yourself. You hold your own keys.</p>
+<h3>Does it make money?</h3><p>No claim is made. Leveraged trading is zero-sum before fees and most traders lose. Paper-trade first.</p>
+<h3>Which models work?</h3><p>Any Claude model with tool use. The default is <code>claude-sonnet-5-5</code>; set <code>model</code> in the config.</p>
+<h3>What does a tick cost?</h3><p>A few LLM calls with short prompts. Cost scales with <code>intervalSec</code> and the model you choose.</p>
+<h3>Why only BTC and ETH?</h3><p>It is a default allow-list, not a limit of the engine. Any Hyperliquid perp can be listed in <code>markets</code>; the exchange cap is read live.</p>
+<h3>How is liquidation handled?</h3><p>Positions are isolated margin, so a liquidation loses that position's margin only. Paper mode models this with the exchange's maintenance margin formula; live mode is whatever Hyperliquid does.</p>
+<h3>Is it related to pump.fun?</h3><p>The fee-split and profit-routing math is built for a pump.fun creator-fee flow, but the Solana legs are not shipped yet. See the <a href="roadmap.html">roadmap</a>.</p>
+<h3>Affiliation?</h3><p>Independent open source by nirholas. Not affiliated with Hyperliquid, pump.fun or Anthropic.</p>

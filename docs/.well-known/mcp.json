@@ -1,0 +1,23 @@
+{
+  "name": "io.github.nirholas/perpad",
+  "description": "Read-only MCP server: live Hyperliquid markets, dry-run risk checks, hash-chained journal audits. Never signs or sends orders.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/nirholas/perpad",
+    "source": "github"
+  },
+  "transport": {
+    "type": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "github:nirholas/perpad",
+      "mcp"
+    ]
+  },
+  "tools": [
+    "get_markets",
+    "check_risk",
+    "read_journal"
+  ]
+}

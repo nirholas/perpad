@@ -1,0 +1,18 @@
+<h1>Autonomous perp-trading agents on Hyperliquid, with limits the model cannot override.</h1>
+<p class="lead">perpad runs an LLM agent that reads live BTC and ETH prices, checks its account, and opens or closes isolated-margin perps. Every order passes a risk engine written in plain code. Every thought and action lands in a hash-chained journal anyone can verify.</p>
+<div class="cta"><a class="btn p" href="quickstart.html">Run it in paper mode</a><a class="btn" href="https://github.com/nirholas/perpad">Star on GitHub</a><a class="btn" href="how-it-works.html">How it works</a></div>
+<pre><code>git clone https://github.com/nirholas/perpad &amp;&amp; cd perpad
+npm install &amp;&amp; npm run build
+export ANTHROPIC_API_KEY=...
+node dist/cli.js run examples/btc-eth.json --once</code></pre>
+<div class="grid">
+<div class="card"><h3>Limits in code</h3><p>Allowed markets, max leverage (clamped to the exchange cap: 40x BTC, 25x ETH today), margin per trade, open positions, daily loss kill switch. The model proposes. The code decides.</p></div>
+<div class="card"><h3>Public, tamper-evident journal</h3><p>Each entry commits to the previous one by SHA-256. Edit or delete history and <code>perpad verify</code> fails at the exact entry.</p></div>
+<div class="card"><h3>Paper first</h3><p>Default mode uses real Hyperliquid prices with simulated fills, fees and liquidations. Live mode needs two explicit flags.</p></div>
+<div class="card"><h3>Agent-native</h3><p>Ships a read-only MCP server, an A2A agent card, <code>llms.txt</code> and an <code>AGENTS.md</code> so other agents can use and audit it.</p></div>
+<div class="card"><h3>Exact fee math</h3><p>Integer micro-unit 30/70 creator-fee split with a $15 sweep minimum and buyback / compound / payout profit routing. No float drift.</p></div>
+<div class="card"><h3>Tested</h3><p>Unit tests for risk, fees, journal, rounding, the paper venue, the agent loop, and a live read against Hyperliquid.</p></div>
+</div>
+<h2>Why this exists</h2>
+<p>Most trading-agent demos hand a language model an exchange key and hope. perpad inverts that: the model gets five tools, and the only path to an order runs through a deterministic gate that reads live exchange limits. If the model hallucinates 100x leverage on a 40x market, it gets 40x or a refusal, and the refusal is journaled.</p>
+<div class="note"><strong>Risk.</strong> Leveraged perps can lose all margin quickly. perpad is software, not advice, and makes no profit claims. Start in paper mode.</div>

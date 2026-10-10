@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>perpad: autonomous perp-trading agents on Hyperliquid</title>
+<meta name="description" content="Open-source framework for AI trading agents on Hyperliquid with hard risk limits enforced in code, a tamper-evident public decision journal, paper and live modes, and an MCP server.">
+<link rel="canonical" href="https://nirholas.github.io/perpad/">
+<meta name="theme-color" content="#0b0f14">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="perpad">
+<meta property="og:title" content="perpad: autonomous perp-trading agents on Hyperliquid">
+<meta property="og:description" content="Open-source framework for AI trading agents on Hyperliquid with hard risk limits enforced in code, a tamper-evident public decision journal, paper and live modes, and an MCP server.">
+<meta property="og:url" content="https://nirholas.github.io/perpad/">
+<meta property="og:image" content="https://nirholas.github.io/perpad/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="perpad: autonomous perp-trading agents on Hyperliquid">
+<meta name="twitter:description" content="Open-source framework for AI trading agents on Hyperliquid with hard risk limits enforced in code, a tamper-evident public decision journal, paper and live modes, and an MCP server.">
+<meta name="twitter:image" content="https://nirholas.github.io/perpad/og.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="text/plain" href="https://nirholas.github.io/perpad/llms.txt" title="llms.txt">
+<link rel="alternate" type="application/json" href="https://nirholas.github.io/perpad/.well-known/agent-card.json" title="A2A agent card">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"perpad","description":"Open-source framework for AI trading agents on Hyperliquid with hard risk limits enforced in code, a tamper-evident public decision journal, paper and live modes, and an MCP server.","codeRepository":"https://github.com/nirholas/perpad","programmingLanguage":"TypeScript","license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"nirholas","url":"https://github.com/nirholas"},"runtimePlatform":"Node.js"},{"@context":"https://schema.org","@type":"WebSite","name":"perpad","url":"https://nirholas.github.io/perpad/"}]</script>
+<style>:root{--bg:#fff;--fg:#0f1720;--mut:#52606d;--line:#dde3ea;--card:#f5f7fa;--acc:#0a8f5b;--accfg:#fff;--code:#eef2f6}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0f14;--fg:#f2f5f8;--mut:#9aa7b5;--line:#1e2832;--card:#111820;--acc:#3ddc97;--accfg:#04120b;--code:#0f1620}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+.skip{position:absolute;left:-999px}.skip:focus{left:12px;top:12px;background:var(--acc);color:var(--accfg);padding:8px 12px;border-radius:8px;z-index:9}
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);z-index:5}
+.bar{display:flex;align-items:center;gap:18px;min-height:56px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
+.brand{font-weight:700;font-size:18px;color:var(--fg);text-decoration:none;display:flex;align-items:center;gap:8px}
+.mark{width:18px;height:18px;border-radius:5px;background:var(--acc);display:inline-block}
+nav{display:flex;gap:4px 14px;flex-wrap:wrap;flex:1}
+nav a{color:var(--mut);text-decoration:none;font-size:14px;padding:4px 2px;border-bottom:2px solid transparent}
+nav a:hover{color:var(--fg)}nav a[aria-current]{color:var(--fg);border-color:var(--acc)}
+.gh{font-size:14px;font-weight:600;color:var(--accfg);background:var(--acc);padding:6px 12px;border-radius:8px;text-decoration:none}
+a{color:var(--acc)}a:focus-visible,.gh:focus-visible,nav a:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:4px}
+.gh:hover{filter:brightness(1.08)}.gh:active{transform:translateY(1px)}
+main{padding-top:40px;padding-bottom:64px}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.15;margin:0 0 14px;letter-spacing:-.02em}
+h2{font-size:24px;margin:44px 0 10px;letter-spacing:-.01em}h3{font-size:18px;margin:28px 0 6px}
+p,li{color:var(--fg)}.lead{font-size:19px;color:var(--mut);max-width:640px}
+code{background:var(--code);padding:2px 6px;border-radius:5px;font:13.5px ui-monospace,SFMono-Regular,Menlo,monospace}
+pre{background:var(--code);border:1px solid var(--line);padding:16px;border-radius:10px;overflow-x:auto;font:13.5px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}pre code{background:none;padding:0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:22px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}.card h3{margin-top:0}.card p{margin:0;color:var(--mut);font-size:15px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0}
+.btn{display:inline-block;padding:10px 16px;border-radius:10px;font-weight:600;text-decoration:none;border:1px solid var(--line);color:var(--fg)}
+.btn.p{background:var(--acc);color:var(--accfg);border-color:var(--acc)}.btn:hover{filter:brightness(1.07)}.btn:active{transform:translateY(1px)}
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:15px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--mut);font-weight:600}
+.note{border-left:3px solid var(--acc);background:var(--card);padding:10px 16px;border-radius:0 10px 10px 0;margin:20px 0}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--mut);font-size:13.5px}
+@media (max-width:560px){.bar{gap:10px}.gh{order:2}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><div class="wrap bar"><a class="brand" href="./"><span class="mark" aria-hidden="true"></span>perpad</a><nav aria-label="Primary"><a href="./" aria-current="page">Home</a><a href="quickstart.html">Quickstart</a><a href="how-it-works.html">How it works</a><a href="risk-engine.html">Risk</a><a href="journal.html">Journal</a><a href="fees-and-profit.html">Fees</a><a href="mcp.html">MCP</a><a href="security.html">Security</a><a href="faq.html">FAQ</a><a href="roadmap.html">Roadmap</a></nav><a class="gh" href="https://github.com/nirholas/perpad">GitHub</a></div></header>
+<main id="main" class="wrap">
+<h1>Autonomous perp-trading agents on Hyperliquid, with limits the model cannot override.</h1>
+<p class="lead">perpad runs an LLM agent that reads live BTC and ETH prices, checks its account, and opens or closes isolated-margin perps. Every order passes a risk engine written in plain code. Every thought and action lands in a hash-chained journal anyone can verify.</p>
+<div class="cta"><a class="btn p" href="quickstart.html">Run it in paper mode</a><a class="btn" href="https://github.com/nirholas/perpad">Star on GitHub</a><a class="btn" href="how-it-works.html">How it works</a></div>
+<pre><code>git clone https://github.com/nirholas/perpad &amp;&amp; cd perpad
+npm install &amp;&amp; npm run build
+export ANTHROPIC_API_KEY=...
+node dist/cli.js run examples/btc-eth.json --once</code></pre>
+<div class="grid">
+<div class="card"><h3>Limits in code</h3><p>Allowed markets, max leverage (clamped to the exchange cap: 40x BTC, 25x ETH today), margin per trade, open positions, daily loss kill switch. The model proposes. The code decides.</p></div>
+<div class="card"><h3>Public, tamper-evident journal</h3><p>Each entry commits to the previous one by SHA-256. Edit or delete history and <code>perpad verify</code> fails at the exact entry.</p></div>
+<div class="card"><h3>Paper first</h3><p>Default mode uses real Hyperliquid prices with simulated fills, fees and liquidations. Live mode needs two explicit flags.</p></div>
+<div class="card"><h3>Agent-native</h3><p>Ships a read-only MCP server, an A2A agent card, <code>llms.txt</code> and an <code>AGENTS.md</code> so other agents can use and audit it.</p></div>
+<div class="card"><h3>Exact fee math</h3><p>Integer micro-unit 30/70 creator-fee split with a $15 sweep minimum and buyback / compound / payout profit routing. No float drift.</p></div>
+<div class="card"><h3>Tested</h3><p>Unit tests for risk, fees, journal, rounding, the paper venue, the agent loop, and a live read against Hyperliquid.</p></div>
+</div>
+<h2>Why this exists</h2>
+<p>Most trading-agent demos hand a language model an exchange key and hope. perpad inverts that: the model gets five tools, and the only path to an order runs through a deterministic gate that reads live exchange limits. If the model hallucinates 100x leverage on a 40x market, it gets 40x or a refusal, and the refusal is journaled.</p>
+<div class="note"><strong>Risk.</strong> Leveraged perps can lose all margin quickly. perpad is software, not advice, and makes no profit claims. Start in paper mode.</div>
+
+</main>
+<footer><div class="wrap">MIT licensed. Independent open-source project by <a href="https://github.com/nirholas">nirholas</a>. Not affiliated with Hyperliquid, pump.fun or Anthropic. Not financial advice: leveraged trading can lose all margin. <a href="https://nirholas.github.io/perpad/llms.txt">llms.txt</a> · <a href="https://nirholas.github.io/perpad/.well-known/agent-card.json">agent card</a> · <a href="https://github.com/nirholas/perpad">source</a></div></footer>
+</body>
+</html>

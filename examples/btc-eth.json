@@ -1,0 +1,14 @@
+{
+  "name": "Tidewatcher",
+  "strategy": "Trade BTC and ETH momentum on the 1h trend. Prefer holding. Use tight leverage and never risk more than the margin cap.",
+  "limits": {
+    "markets": ["BTC", "ETH"],
+    "maxLeverage": 10,
+    "marginPerTradeUsd": 100,
+    "maxOpenPositions": 2,
+    "maxDailyLossUsd": 50
+  },
+  "intervalSec": 300,
+  "paper": { "startingUsd": 1000 },
+  "journalPath": "journal/tidewatcher.jsonl"
+}

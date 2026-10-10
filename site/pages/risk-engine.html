@@ -1,0 +1,19 @@
+<h1>Risk engine</h1>
+<p class="lead">A pure function. Given a proposal, account state and exchange limits, it returns allow or deny plus the clamped values. The model cannot talk its way past it.</p>
+<h2>Limits</h2>
+<table><tr><th>Field</th><th>Meaning</th></tr>
+<tr><td><code>markets</code></td><td>Allow-list of coins. Anything else is refused.</td></tr>
+<tr><td><code>maxLeverage</code></td><td>Your cap. Clamped further to the exchange cap read live from Hyperliquid meta (BTC 40x, ETH 25x at time of writing). A higher cap is clamped, never errors.</td></tr>
+<tr><td><code>marginPerTradeUsd</code></td><td>Margin per position, also clamped to withdrawable balance.</td></tr>
+<tr><td><code>maxOpenPositions</code></td><td>Concurrent positions across all markets. One position per market.</td></tr>
+<tr><td><code>maxDailyLossUsd</code></td><td>Optional kill switch. Once realized PnL since 00:00 UTC (fees included) reaches the negative of this, no new positions open. Closing stays allowed.</td></tr></table>
+<h2>Behavior</h2>
+<ul><li><strong>Clamp</strong>: leverage and margin over the limit are reduced and the reduction is reported back to the model.</li><li><strong>Deny</strong>: disallowed market, duplicate position, full book, kill switch tripped, non-positive inputs, or notional under Hyperliquid's $10 minimum.</li></ul>
+<pre><code>import { evaluate } from "perpad";
+evaluate(
+  { coin: "BTC", side: "long", leverage: 100, marginUsd: 900 },
+  { openCoins: [], withdrawableUsd: 1000, dailyPnlUsd: 0, exchangeMaxLeverage: { BTC: 40 } },
+  { markets: ["BTC"], maxLeverage: 50, marginPerTradeUsd: 100, maxOpenPositions: 1 },
+);
+// { allowed: true, adjusted: { leverage: 40, marginUsd: 100 }, reasons: [...clamped] }</code></pre>
+<p>Dry-run any proposal from an MCP client with the <a href="mcp.html"><code>check_risk</code></a> tool.</p>

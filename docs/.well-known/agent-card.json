@@ -1,0 +1,53 @@
+{
+  "protocolVersion": "0.3.0",
+  "name": "perpad",
+  "description": "Open-source framework for autonomous perp-trading agents on Hyperliquid. This card describes the project and its read-only MCP server; it does not operate a hosted trading agent.",
+  "url": "https://github.com/nirholas/perpad",
+  "documentationUrl": "https://nirholas.github.io/perpad/",
+  "version": "0.1.0",
+  "provider": {
+    "organization": "nirholas",
+    "url": "https://github.com/nirholas"
+  },
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false
+  },
+  "defaultInputModes": [
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "get-markets",
+      "name": "Live Hyperliquid markets",
+      "description": "Mark price, max leverage and funding for requested coins.",
+      "tags": [
+        "hyperliquid",
+        "perps",
+        "market-data"
+      ]
+    },
+    {
+      "id": "check-risk",
+      "name": "Dry-run risk check",
+      "description": "Evaluate a trade proposal against risk limits using live exchange leverage caps. Sends no orders.",
+      "tags": [
+        "risk",
+        "leverage",
+        "trading"
+      ]
+    },
+    {
+      "id": "audit-journal",
+      "name": "Audit decision journal",
+      "description": "Read an agent journal and verify its hash chain.",
+      "tags": [
+        "audit",
+        "transparency"
+      ]
+    }
+  ]
+}

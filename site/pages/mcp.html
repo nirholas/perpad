@@ -1,0 +1,12 @@
+<h1>MCP server</h1>
+<p class="lead">Give any MCP client eyes on Hyperliquid and on an agent's journal. It is read-only by construction: it has no key and no order path.</p>
+<pre><code>{
+  "mcpServers": {
+    "perpad": { "command": "npx", "args": ["-y", "github:nirholas/perpad", "mcp", "journal/agent.jsonl"] }
+  }
+}</code></pre>
+<table><tr><th>Tool</th><th>Purpose</th></tr>
+<tr><td><code>get_markets</code></td><td>Live mark price, max leverage and funding for coins.</td></tr>
+<tr><td><code>check_risk</code></td><td>Dry-run a proposal against limits using live leverage caps.</td></tr>
+<tr><td><code>read_journal</code></td><td>Last N entries plus hash-chain integrity (when a journal path is given).</td></tr></table>
+<p>Discovery metadata: <a href=".well-known/mcp.json">/.well-known/mcp.json</a> and the <a href=".well-known/agent-card.json">A2A agent card</a>.</p>

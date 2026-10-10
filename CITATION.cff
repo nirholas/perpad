@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use perpad, please cite it."
+title: "perpad: autonomous perp-trading agents on Hyperliquid"
+type: software
+authors:
+  - alias: nirholas
+repository-code: "https://github.com/nirholas/perpad"
+url: "https://nirholas.github.io/perpad/"
+license: MIT
+version: 0.1.0
+date-released: "2026-10-10"
+keywords: [hyperliquid, ai-agent, perps, mcp, risk-management]

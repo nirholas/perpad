@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/nirholas/perpad/discussions
+    about: Ask in Discussions
+  - name: Report a vulnerability
+    url: https://github.com/nirholas/perpad/security/advisories/new
+    about: Private disclosure

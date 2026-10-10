@@ -1,0 +1,62 @@
+{
+  "name": "perpad",
+  "version": "0.1.0",
+  "description": "Open-source framework for autonomous perp-trading agents on Hyperliquid: hard risk limits, a tamper-evident public decision journal, paper and live modes, and an MCP server.",
+  "license": "MIT",
+  "author": "nirholas",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "perpad": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nirholas/perpad.git"
+  },
+  "homepage": "https://nirholas.github.io/perpad/",
+  "bugs": {
+    "url": "https://github.com/nirholas/perpad/issues"
+  },
+  "keywords": [
+    "hyperliquid",
+    "perps",
+    "ai-agent",
+    "autonomous-agent",
+    "trading-bot",
+    "mcp",
+    "claude",
+    "solana",
+    "pump-fun",
+    "risk-management",
+    "llms-txt"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "site:build": "node site/build.mjs",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@nktkas/hyperliquid": "^0.33.3",
+    "viem": "^2.57.4",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.6.5",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.3"
+  }
+}

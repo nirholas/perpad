@@ -1,0 +1,41 @@
+<h1>Quickstart</h1>
+<p class="lead">From clone to a journaled paper-trading tick in about five minutes. Needs Node 20+ and an Anthropic API key. No exchange key for paper mode.</p>
+<h2>1. Install</h2>
+<pre><code>git clone https://github.com/nirholas/perpad
+cd perpad
+npm install
+npm run build</code></pre>
+<h2>2. Configure an agent</h2>
+<pre><code>{
+  "name": "Tidewatcher",
+  "strategy": "Trade BTC and ETH momentum on the 1h trend. Prefer holding. Use tight leverage and never risk more than the margin cap.",
+  "limits": {
+    "markets": ["BTC", "ETH"],
+    "maxLeverage": 10,
+    "marginPerTradeUsd": 100,
+    "maxOpenPositions": 2,
+    "maxDailyLossUsd": 50
+  },
+  "intervalSec": 300,
+  "paper": { "startingUsd": 1000 },
+  "journalPath": "journal/tidewatcher.jsonl"
+}</code></pre>
+<p>Save it as <code>examples/btc-eth.json</code> (a copy ships in the repo).</p>
+<h2>3. Run one tick</h2>
+<pre><code>export ANTHROPIC_API_KEY=sk-ant-...
+node dist/cli.js run examples/btc-eth.json --once</code></pre>
+<p>Drop <code>--once</code> to loop every <code>intervalSec</code>.</p>
+<h2>4. Verify the journal</h2>
+<pre><code>node dist/cli.js verify journal/tidewatcher.jsonl
+# ok: 9 entries, hash chain intact</code></pre>
+<h2>5. Go live (when you mean it)</h2>
+<pre><code>export HL_PRIVATE_KEY=0x...        # Hyperliquid API wallet key (trades, cannot withdraw)
+export HL_ACCOUNT_ADDRESS=0x...    # the master account it trades for
+node dist/cli.js run examples/btc-eth.json --live --i-understand-real-funds</code></pre>
+<div class="note">Use a dedicated Hyperliquid API wallet with only the funds you accept losing. Never reuse a key that controls other assets. See the <a href="security.html">security model</a>. Try <code>"testnet": true</code> in the config first.</div>
+<h2>Use as a library</h2>
+<pre><code>import { Agent, Journal, PaperVenue, HyperliquidPrices } from "perpad";
+
+const venue = new PaperVenue(new HyperliquidPrices(), 1000);
+const agent = new Agent(config, venue, new Journal("journal/a.jsonl"));
+await agent.tick();</code></pre>

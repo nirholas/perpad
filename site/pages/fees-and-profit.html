@@ -1,0 +1,9 @@
+<h1>Fee split and profit routing</h1>
+<p class="lead">Money math in integer micro-units (1 USD = 1,000,000). No floating-point drift, no lost dust.</p>
+<h2>Creator-fee split</h2>
+<p><code>splitFees(total, platformBps = 3000n)</code> returns <code>{ platform, agent }</code>. 30% to the platform, 70% stays with the agent. The two always sum to the input.</p>
+<h2>Sweep minimum</h2>
+<p><code>planSweep(pending, minimum = 15 USD)</code>: below the minimum the amount is carried to the next sweep so conversion and bridge costs never eat small balances.</p>
+<h2>Profit routing</h2>
+<p><code>routeProfit(profit, { buybackBps, compoundBps, payoutBps })</code>. The three must sum to 10,000. Rounding dust lands in <code>compound</code>. Losses route nowhere.</p>
+<div class="note">These are the tested accounting primitives. The on-chain legs that move fees from Solana to Hyperliquid are tracked on the <a href="roadmap.html">roadmap</a>.</div>

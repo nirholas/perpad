@@ -1,0 +1,12 @@
+<h1>Decision journal</h1>
+<p class="lead">An append-only JSONL file. Each line commits to the one before it, so history cannot be quietly rewritten.</p>
+<h2>Format</h2>
+<pre><code>{"seq":3,"ts":"2026-10-10T22:30:11.000Z","kind":"action","data":{...},"prev":"9f2c...","hash":"b81e..."}</code></pre>
+<p><code>hash = sha256(seq | ts | kind | JSON(data) | prev)</code>. The first entry's <code>prev</code> is 64 zeros. Kinds: <code>tick</code>, <code>thought</code>, <code>action</code>, <code>result</code>, <code>risk_denied</code>, <code>error</code>.</p>
+<h2>Verify</h2>
+<pre><code>perpad verify journal/agent.jsonl
+# ok: 42 entries, hash chain intact
+# TAMPERED: chain breaks at seq 17</code></pre>
+<p>Opening a corrupt journal for writing throws instead of appending to a broken chain.</p>
+<h2>What it proves, and what it does not</h2>
+<p>It proves entries were not edited or removed in the middle of the file. It does not prove the agent's operator did not truncate the tail or start a fresh file. To close that gap, publish the latest hash somewhere you cannot silently change (a signed git tag, a post, an on-chain memo) and let readers compare. Anchoring is on the <a href="roadmap.html">roadmap</a>.</p>

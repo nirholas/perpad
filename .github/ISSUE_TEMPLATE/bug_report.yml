@@ -1,0 +1,15 @@
+name: Bug report
+description: Something behaves wrongly
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes: { label: What happened, description: "Expected vs actual. Never paste keys." }
+    validations: { required: true }
+  - type: textarea
+    id: repro
+    attributes: { label: Steps to reproduce, description: "Config (redact secrets), command, journal excerpt." }
+    validations: { required: true }
+  - type: input
+    id: ver
+    attributes: { label: "perpad version and Node version" }

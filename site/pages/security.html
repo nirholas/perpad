@@ -1,0 +1,9 @@
+<h1>Security model</h1>
+<h2>What the code enforces</h2>
+<ul><li>The model has no tool for transfers, withdrawals, cross margin or limit changes.</li><li>All opens pass the <a href="risk-engine.html">risk engine</a>; limits come from config, not from the prompt.</li><li>Live mode requires <code>--live</code> and <code>--i-understand-real-funds</code>, and a valid <code>HL_PRIVATE_KEY</code>.</li><li>The MCP server holds no key.</li></ul>
+<h2>Key handling</h2>
+<ul><li>Use a Hyperliquid <strong>API wallet</strong> (agent wallet): it can trade but cannot withdraw. Set <code>accountAddress</code> to the master account.</li><li>Keys are read from environment variables only and never written to the journal.</li><li>Run on a machine you control. Do not commit <code>.env</code>.</li></ul>
+<h2>Residual risk</h2>
+<ul><li><strong>Market risk.</strong> Within the limits the agent can still lose all margin on every trade it takes.</li><li><strong>Prompt injection.</strong> The agent only ingests exchange data, but if you add tools that read the web or social feeds, treat that text as untrusted.</li><li><strong>Operator trust.</strong> A journal proves integrity, not honesty of the operator. See <a href="journal.html">the journal limits</a>.</li><li><strong>Software risk.</strong> No audit yet. Test on testnet and paper first.</li></ul>
+<h2>Reporting vulnerabilities</h2>
+<p>Use GitHub private vulnerability reporting on the repository. Please do not open public issues for exploitable bugs.</p>

@@ -1,0 +1,16 @@
+<h1>How it works</h1>
+<p class="lead">One loop, five tools, one gate.</p>
+<h2>The tick</h2>
+<ol><li>The agent appends a <code>tick</code> entry to the journal.</li><li>It sends the model the strategy, the hard limits and five tools.</li><li>The model reads markets and its account, reasons in text (journaled as <code>thought</code>), then calls <code>open_position</code>, <code>close_position</code> or <code>hold</code>.</li><li>Every <code>open_position</code> is evaluated by the <a href="risk-engine.html">risk engine</a> against live account state and live exchange leverage caps. Allowed requests are clamped to the limits and executed. Denied requests are journaled as <code>risk_denied</code> and the model is told why.</li><li>The tick ends on <code>hold</code>, after the model stops calling tools, or after <code>maxRounds</code> (default 8).</li></ol>
+<h2>Tools the model sees</h2>
+<table><tr><th>Tool</th><th>What it does</th></tr>
+<tr><td><code>get_markets</code></td><td>Mark price, exchange max leverage, hourly funding for allowed markets.</td></tr>
+<tr><td><code>get_account</code></td><td>Equity, withdrawable margin, today's realized PnL, open positions with liquidation prices.</td></tr>
+<tr><td><code>open_position</code></td><td>Isolated-margin long or short. Subject to the risk gate.</td></tr>
+<tr><td><code>close_position</code></td><td>Reduce-only market close.</td></tr>
+<tr><td><code>hold</code></td><td>Do nothing. Ends the turn.</td></tr></table>
+<p>There is no tool for withdrawals, transfers, cross margin, or changing limits. The model cannot do what no tool allows.</p>
+<h2>Order execution</h2>
+<p>Orders are marketable immediate-or-cancel limits priced at mid plus or minus a slippage bound (default 1%), with prices rounded to Hyperliquid's tick rules (5 significant figures, at most 6 minus szDecimals decimals) and sizes rounded down so a position never exceeds approved margin. Leverage is set isolated before the order. An unfilled IOC opens nothing and is reported as an error.</p>
+<h2>Venues</h2>
+<p><code>HyperliquidVenue</code> signs real orders with <code>@nktkas/hyperliquid</code>. <code>PaperVenue</code> reads the same live prices but fills locally with the 0.045% taker fee and models isolated liquidation. Both implement one <code>Venue</code> interface, so a strategy tested on paper runs unchanged live.</p>

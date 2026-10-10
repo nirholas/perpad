@@ -1,0 +1,384 @@
+# perpad: full documentation
+
+
+---
+
+# perpad: autonomous perp-trading agents on Hyperliquid
+
+URL: https://nirholas.github.io/perpad/
+
+# Autonomous perp-trading agents on Hyperliquid, with limits the model cannot override.
+
+perpad runs an LLM agent that reads live BTC and ETH prices, checks its account, and opens or closes isolated-margin perps. Every order passes a risk engine written in plain code. Every thought and action lands in a hash-chained journal anyone can verify.
+
+Run it in paper modeStar on GitHubHow it works
+
+```
+git clone https://github.com/nirholas/perpad && cd perpad
+npm install && npm run build
+export ANTHROPIC_API_KEY=...
+node dist/cli.js run examples/btc-eth.json --once
+```
+
+### Limits in code
+Allowed markets, max leverage (clamped to the exchange cap: 40x BTC, 25x ETH today), margin per trade, open positions, daily loss kill switch. The model proposes. The code decides.
+
+### Public, tamper-evident journal
+Each entry commits to the previous one by SHA-256. Edit or delete history and perpad verify fails at the exact entry.
+
+### Paper first
+Default mode uses real Hyperliquid prices with simulated fills, fees and liquidations. Live mode needs two explicit flags.
+
+### Agent-native
+Ships a read-only MCP server, an A2A agent card, llms.txt and an AGENTS.md so other agents can use and audit it.
+
+### Exact fee math
+Integer micro-unit 30/70 creator-fee split with a $15 sweep minimum and buyback / compound / payout profit routing. No float drift.
+
+### Tested
+Unit tests for risk, fees, journal, rounding, the paper venue, the agent loop, and a live read against Hyperliquid.
+
+## Why this exists
+
+Most trading-agent demos hand a language model an exchange key and hope. perpad inverts that: the model gets five tools, and the only path to an order runs through a deterministic gate that reads live exchange limits. If the model hallucinates 100x leverage on a 40x market, it gets 40x or a refusal, and the refusal is journaled.
+
+Risk. Leveraged perps can lose all margin quickly. perpad is software, not advice, and makes no profit claims. Start in paper mode.
+
+---
+
+# Quickstart
+
+URL: https://nirholas.github.io/perpad/quickstart.html
+
+# Quickstart
+
+From clone to a journaled paper-trading tick in about five minutes. Needs Node 20+ and an Anthropic API key. No exchange key for paper mode.
+
+## 1. Install
+
+```
+git clone https://github.com/nirholas/perpad
+cd perpad
+npm install
+npm run build
+```
+
+## 2. Configure an agent
+
+```
+{
+  "name": "Tidewatcher",
+  "strategy": "Trade BTC and ETH momentum on the 1h trend. Prefer holding. Use tight leverage and never risk more than the margin cap.",
+  "limits": {
+    "markets": ["BTC", "ETH"],
+    "maxLeverage": 10,
+    "marginPerTradeUsd": 100,
+    "maxOpenPositions": 2,
+    "maxDailyLossUsd": 50
+  },
+  "intervalSec": 300,
+  "paper": { "startingUsd": 1000 },
+  "journalPath": "journal/tidewatcher.jsonl"
+}
+```
+
+Save it as examples/btc-eth.json (a copy ships in the repo).
+
+## 3. Run one tick
+
+```
+export ANTHROPIC_API_KEY=sk-ant-...
+node dist/cli.js run examples/btc-eth.json --once
+```
+
+Drop --once to loop every intervalSec.
+
+## 4. Verify the journal
+
+```
+node dist/cli.js verify journal/tidewatcher.jsonl
+# ok: 9 entries, hash chain intact
+```
+
+## 5. Go live (when you mean it)
+
+```
+export HL_PRIVATE_KEY=0x...        # Hyperliquid API wallet key (trades, cannot withdraw)
+export HL_ACCOUNT_ADDRESS=0x...    # the master account it trades for
+node dist/cli.js run examples/btc-eth.json --live --i-understand-real-funds
+```
+
+Use a dedicated Hyperliquid API wallet with only the funds you accept losing. Never reuse a key that controls other assets. See the security model. Try "testnet": true in the config first.
+
+## Use as a library
+
+```
+import { Agent, Journal, PaperVenue, HyperliquidPrices } from "perpad";
+
+const venue = new PaperVenue(new HyperliquidPrices(), 1000);
+const agent = new Agent(config, venue, new Journal("journal/a.jsonl"));
+await agent.tick();
+```
+
+---
+
+# How it works
+
+URL: https://nirholas.github.io/perpad/how-it-works.html
+
+# How it works
+
+One loop, five tools, one gate.
+
+## The tick
+
+- The agent appends a tick entry to the journal.
+- It sends the model the strategy, the hard limits and five tools.
+- The model reads markets and its account, reasons in text (journaled as thought), then calls open_position, close_position or hold.
+- Every open_position is evaluated by the risk engine against live account state and live exchange leverage caps. Allowed requests are clamped to the limits and executed. Denied requests are journaled as risk_denied and the model is told why.
+- The tick ends on hold, after the model stops calling tools, or after maxRounds (default 8).
+
+## Tools the model sees
+
+ToolWhat it does
+
+get_marketsMark price, exchange max leverage, hourly funding for allowed markets.
+
+get_accountEquity, withdrawable margin, today's realized PnL, open positions with liquidation prices.
+
+open_positionIsolated-margin long or short. Subject to the risk gate.
+
+close_positionReduce-only market close.
+
+holdDo nothing. Ends the turn.
+
+There is no tool for withdrawals, transfers, cross margin, or changing limits. The model cannot do what no tool allows.
+
+## Order execution
+
+Orders are marketable immediate-or-cancel limits priced at mid plus or minus a slippage bound (default 1%), with prices rounded to Hyperliquid's tick rules (5 significant figures, at most 6 minus szDecimals decimals) and sizes rounded down so a position never exceeds approved margin. Leverage is set isolated before the order. An unfilled IOC opens nothing and is reported as an error.
+
+## Venues
+
+HyperliquidVenue signs real orders with @nktkas/hyperliquid. PaperVenue reads the same live prices but fills locally with the 0.045% taker fee and models isolated liquidation. Both implement one Venue interface, so a strategy tested on paper runs unchanged live.
+
+---
+
+# Risk engine
+
+URL: https://nirholas.github.io/perpad/risk-engine.html
+
+# Risk engine
+
+A pure function. Given a proposal, account state and exchange limits, it returns allow or deny plus the clamped values. The model cannot talk its way past it.
+
+## Limits
+
+FieldMeaning
+
+marketsAllow-list of coins. Anything else is refused.
+
+maxLeverageYour cap. Clamped further to the exchange cap read live from Hyperliquid meta (BTC 40x, ETH 25x at time of writing). A higher cap is clamped, never errors.
+
+marginPerTradeUsdMargin per position, also clamped to withdrawable balance.
+
+maxOpenPositionsConcurrent positions across all markets. One position per market.
+
+maxDailyLossUsdOptional kill switch. Once realized PnL since 00:00 UTC (fees included) reaches the negative of this, no new positions open. Closing stays allowed.
+
+## Behavior
+
+- Clamp: leverage and margin over the limit are reduced and the reduction is reported back to the model.
+- Deny: disallowed market, duplicate position, full book, kill switch tripped, non-positive inputs, or notional under Hyperliquid's $10 minimum.
+
+```
+import { evaluate } from "perpad";
+evaluate(
+  { coin: "BTC", side: "long", leverage: 100, marginUsd: 900 },
+  { openCoins: [], withdrawableUsd: 1000, dailyPnlUsd: 0, exchangeMaxLeverage: { BTC: 40 } },
+  { markets: ["BTC"], maxLeverage: 50, marginPerTradeUsd: 100, maxOpenPositions: 1 },
+);
+// { allowed: true, adjusted: { leverage: 40, marginUsd: 100 }, reasons: [...clamped] }
+```
+
+Dry-run any proposal from an MCP client with the check_risk tool.
+
+---
+
+# Decision journal
+
+URL: https://nirholas.github.io/perpad/journal.html
+
+# Decision journal
+
+An append-only JSONL file. Each line commits to the one before it, so history cannot be quietly rewritten.
+
+## Format
+
+```
+{"seq":3,"ts":"2026-10-10T22:30:11.000Z","kind":"action","data":{...},"prev":"9f2c...","hash":"b81e..."}
+```
+
+hash = sha256(seq | ts | kind | JSON(data) | prev). The first entry's prev is 64 zeros. Kinds: tick, thought, action, result, risk_denied, error.
+
+## Verify
+
+```
+perpad verify journal/agent.jsonl
+# ok: 42 entries, hash chain intact
+# TAMPERED: chain breaks at seq 17
+```
+
+Opening a corrupt journal for writing throws instead of appending to a broken chain.
+
+## What it proves, and what it does not
+
+It proves entries were not edited or removed in the middle of the file. It does not prove the agent's operator did not truncate the tail or start a fresh file. To close that gap, publish the latest hash somewhere you cannot silently change (a signed git tag, a post, an on-chain memo) and let readers compare. Anchoring is on the roadmap.
+
+---
+
+# Fee split and profit routing
+
+URL: https://nirholas.github.io/perpad/fees-and-profit.html
+
+# Fee split and profit routing
+
+Money math in integer micro-units (1 USD = 1,000,000). No floating-point drift, no lost dust.
+
+## Creator-fee split
+
+splitFees(total, platformBps = 3000n) returns { platform, agent }. 30% to the platform, 70% stays with the agent. The two always sum to the input.
+
+## Sweep minimum
+
+planSweep(pending, minimum = 15 USD): below the minimum the amount is carried to the next sweep so conversion and bridge costs never eat small balances.
+
+## Profit routing
+
+routeProfit(profit, { buybackBps, compoundBps, payoutBps }). The three must sum to 10,000. Rounding dust lands in compound. Losses route nowhere.
+
+These are the tested accounting primitives. The on-chain legs that move fees from Solana to Hyperliquid are tracked on the roadmap.
+
+---
+
+# MCP server
+
+URL: https://nirholas.github.io/perpad/mcp.html
+
+# MCP server
+
+Give any MCP client eyes on Hyperliquid and on an agent's journal. It is read-only by construction: it has no key and no order path.
+
+```
+{
+  "mcpServers": {
+    "perpad": { "command": "npx", "args": ["-y", "github:nirholas/perpad", "mcp", "journal/agent.jsonl"] }
+  }
+}
+```
+
+ToolPurpose
+
+get_marketsLive mark price, max leverage and funding for coins.
+
+check_riskDry-run a proposal against limits using live leverage caps.
+
+read_journalLast N entries plus hash-chain integrity (when a journal path is given).
+
+Discovery metadata: /.well-known/mcp.json and the A2A agent card.
+
+---
+
+# Security model
+
+URL: https://nirholas.github.io/perpad/security.html
+
+# Security model
+
+## What the code enforces
+
+- The model has no tool for transfers, withdrawals, cross margin or limit changes.
+- All opens pass the risk engine; limits come from config, not from the prompt.
+- Live mode requires --live and --i-understand-real-funds, and a valid HL_PRIVATE_KEY.
+- The MCP server holds no key.
+
+## Key handling
+
+- Use a Hyperliquid API wallet (agent wallet): it can trade but cannot withdraw. Set accountAddress to the master account.
+- Keys are read from environment variables only and never written to the journal.
+- Run on a machine you control. Do not commit .env.
+
+## Residual risk
+
+- Market risk. Within the limits the agent can still lose all margin on every trade it takes.
+- Prompt injection. The agent only ingests exchange data, but if you add tools that read the web or social feeds, treat that text as untrusted.
+- Operator trust. A journal proves integrity, not honesty of the operator. See the journal limits.
+- Software risk. No audit yet. Test on testnet and paper first.
+
+## Reporting vulnerabilities
+
+Use GitHub private vulnerability reporting on the repository. Please do not open public issues for exploitable bugs.
+
+---
+
+# FAQ
+
+URL: https://nirholas.github.io/perpad/faq.html
+
+# FAQ
+
+### Is this a hosted service?
+No. It is a library and CLI you run yourself. You hold your own keys.
+
+### Does it make money?
+No claim is made. Leveraged trading is zero-sum before fees and most traders lose. Paper-trade first.
+
+### Which models work?
+Any Claude model with tool use. The default is claude-sonnet-5-5; set model in the config.
+
+### What does a tick cost?
+A few LLM calls with short prompts. Cost scales with intervalSec and the model you choose.
+
+### Why only BTC and ETH?
+It is a default allow-list, not a limit of the engine. Any Hyperliquid perp can be listed in markets; the exchange cap is read live.
+
+### How is liquidation handled?
+Positions are isolated margin, so a liquidation loses that position's margin only. Paper mode models this with the exchange's maintenance margin formula; live mode is whatever Hyperliquid does.
+
+### Is it related to pump.fun?
+The fee-split and profit-routing math is built for a pump.fun creator-fee flow, but the Solana legs are not shipped yet. See the roadmap.
+
+### Affiliation?
+Independent open source by nirholas. Not affiliated with Hyperliquid, pump.fun or Anthropic.
+
+---
+
+# Roadmap
+
+URL: https://nirholas.github.io/perpad/roadmap.html
+
+# Roadmap
+
+## Shipped (v0.1)
+
+- Risk engine with live exchange leverage clamps and daily-loss kill switch
+- Hyperliquid venue (isolated margin, IOC market orders) and paper venue
+- Claude tool-use agent loop with hash-chained journal and CLI
+- Read-only MCP server
+- Integer-exact fee split, sweep minimum and profit routing
+
+## Next
+
+- Solana leg: claim pump.fun creator fees, swap to USDC, bridge to Arbitrum, deposit to Hyperliquid
+- Coin launch flow wired to an agent wallet
+- Profit payouts and buyback-and-burn on Solana
+- Journal anchoring (periodic head-hash publication)
+- Public leaderboard from published journals
+- Stop-loss and take-profit trigger orders as first-class tools
+
+## Out of scope
+
+- Custody of user funds. perpad never holds keys for others.
+- Profit guarantees or signals marketed as advice.
+
+Propose or vote on items in Discussions.
