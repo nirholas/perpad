@@ -96,3 +96,30 @@ npm run site:build  # regenerates docs/ (GitHub Pages)
 ```
 
 MIT © nirholas
+
+<!-- three.ws:growth -->
+## Support the project
+
+If perpad saves you time, **[star it on GitHub](https://github.com/nirholas/perpad)**. Stars are how other developers and AI agents find the repositories worth trusting, and they cost you one click.
+
+Know someone who would use it? [Post on X](https://twitter.com/intent/tweet?text=perpad%3A%20Autonomous%20perp-trading%20agents%20on%20Hyperliquid%20with%20hard%20risk%20limits%20enforced%20in%20code%2C%20a&url=https%3A%2F%2Fgithub.com%2Fnirholas%2Fperpad) · [Share on Bluesky](https://bsky.app/intent/compose?text=perpad%3A%20Autonomous%20perp-trading%20agents%20on%20Hyperliquid%20with%20hard%20risk%20limits%20enforced%20in%20code%2C%20a%20https%3A%2F%2Fgithub.com%2Fnirholas%2Fperpad) · [Share on LinkedIn](https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgithub.com%2Fnirholas%2Fperpad) · [Submit to Hacker News](https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fgithub.com%2Fnirholas%2Fperpad&t=perpad%3A%20Autonomous%20perp-trading%20agents%20on%20Hyperliquid%20with%20hard%20risk%20limits%20enforced%20in%20code%2C%20a) · [Share on Reddit](https://www.reddit.com/submit?url=https%3A%2F%2Fgithub.com%2Fnirholas%2Fperpad&title=perpad%3A%20Autonomous%20perp-trading%20agents%20on%20Hyperliquid%20with%20hard%20risk%20limits%20enforced%20in%20code%2C%20a)
+
+## Built for AI agents too
+
+Coding agents and LLM tooling can read this repo directly: [AGENTS.md](./AGENTS.md), [llms.txt](./llms.txt), [llms-full.txt](./llms-full.txt). Point an agent at `https://github.com/nirholas/perpad` and it has the context it needs.
+
+## More from the same author
+
+- [All repositories by nirholas](https://github.com/nirholas/nirholas#readme): the full catalog, grouped by topic
+- [three.ws](https://three.ws): the platform for 3D AI agents with Solana wallets, a skill marketplace and x402 payments
+- Questions or ideas: [open an issue](https://github.com/nirholas/perpad/issues) or [start a discussion](https://github.com/nirholas/perpad/discussions)
+
+## Contributors
+
+[![Contributors](https://contrib.rocks/image?repo=nirholas/perpad)](https://github.com/nirholas/perpad/graphs/contributors)
+
+## Star history
+
+[![Star History Chart](https://api.star-history.com/svg?repos=nirholas/perpad&type=Date)](https://www.star-history.com/#nirholas/perpad&Date)
+
+<!-- /three.ws:growth -->

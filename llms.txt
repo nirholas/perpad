@@ -1,0 +1,28 @@
+# perpad
+
+> Autonomous perp-trading agents on Hyperliquid with hard risk limits enforced in code, a tamper-evident public journal, paper + live modes, and an MCP server.
+
+perpad is an open-source repository by nirholas, part of the three.ws ecosystem.
+
+## Docs
+
+- [README](https://github.com/nirholas/perpad/blob/HEAD/README.md): install, usage and reference
+- [Why](https://github.com/nirholas/perpad/blob/HEAD/README.md#why)
+- [Quickstart (paper mode, no exchange key)](https://github.com/nirholas/perpad/blob/HEAD/README.md#quickstart-paper-mode-no-exchange-key)
+- [Features](https://github.com/nirholas/perpad/blob/HEAD/README.md#features)
+- [Library](https://github.com/nirholas/perpad/blob/HEAD/README.md#library)
+- [MCP](https://github.com/nirholas/perpad/blob/HEAD/README.md#mcp)
+- [Status and roadmap](https://github.com/nirholas/perpad/blob/HEAD/README.md#status-and-roadmap)
+- [Security and risk](https://github.com/nirholas/perpad/blob/HEAD/README.md#security-and-risk)
+- [Contributing](https://github.com/nirholas/perpad/blob/HEAD/README.md#contributing)
+- [AGENTS.md](https://github.com/nirholas/perpad/blob/HEAD/AGENTS.md): guidance for coding agents
+- [Full text for LLMs](https://github.com/nirholas/perpad/blob/HEAD/llms-full.txt): the README inlined
+
+## Project
+
+- [Source](https://github.com/nirholas/perpad)
+- [Issues](https://github.com/nirholas/perpad/issues)
+- [Discussions](https://github.com/nirholas/perpad/discussions)
+- [Homepage](https://nirholas.github.io/perpad/)
+- [three.ws](https://three.ws): the platform this is part of
+- [All repositories by nirholas](https://github.com/nirholas/nirholas#readme)
