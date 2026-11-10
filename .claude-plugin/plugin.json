@@ -1,0 +1,10 @@
+{
+  "name": "perpad",
+  "version": "0.1.0",
+  "description": "Run and audit autonomous Hyperliquid perp-trading agents with hard risk limits and a hash-chained journal, paper mode by default.",
+  "author": {"name": "nirholas"},
+  "repository": "https://github.com/nirholas/perpad",
+  "license": "MIT",
+  "keywords": ["hyperliquid", "perps", "trading-agent", "risk-management", "mcp"],
+  "homepage": "https://nirholas.github.io/perpad/"
+}
