@@ -1,13 +1,20 @@
 {
   "name": "perpad",
-  "owner": {"name": "nirholas"},
+  "owner": {
+    "name": "nirholas"
+  },
   "description": "Autonomous perp-trading agents with limits the model cannot override.",
   "plugins": [
     {
       "name": "perpad",
-      "source": "./",
+      "source": "./plugins/perpad",
       "description": "Configure, run in paper mode, verify the journal of, and inspect the risk limits of a perpad trading agent.",
-      "tags": ["hyperliquid", "trading", "risk-management"]
+      "category": "development",
+      "tags": [
+        "hyperliquid",
+        "trading",
+        "risk-management"
+      ]
     }
   ]
 }
